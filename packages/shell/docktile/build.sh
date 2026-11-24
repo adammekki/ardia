@@ -53,3 +53,11 @@ case "${EXPANDED_CODE_SIGN_IDENTITY_NAME:-}" in
   *) timestamp=--timestamp=none ;;
 esac
 codesign --force --sign "$identity" "$timestamp" "$plugin"
+
+resources="$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Resources"
+assets="${PROJECT_DIR:-$here/../../../apps/browser/macos}/Ardia-macOS/Assets.xcassets"
+mkdir -p "$resources"
+for imageset in "$assets"/AppIcon-*.imageset; do
+  [ -f "$imageset/icon.png" ] || continue
+  cp "$imageset/icon.png" "$resources/$(basename "$imageset" .imageset).png"
+done
